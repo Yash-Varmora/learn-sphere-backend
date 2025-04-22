@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "LearnSphere Backend",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --env-file=.env server.js",
+    "dev": "nodemon --env-file=.env server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yash-Varmora/learn-sphere-backend.git"
+  },
+  "author": "Yash Varmora",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yash-Varmora/learn-sphere-backend/issues"
+  },
+  "homepage": "https://github.com/Yash-Varmora/learn-sphere-backend#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
