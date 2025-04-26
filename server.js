@@ -8,7 +8,6 @@ import { connectDB } from "./src/configs/prisma.config.js";
 const port = config.PORT || 5000;
 (async () => {
     try {
-        
     
     await connectDB()
     const server = http.createServer(app);

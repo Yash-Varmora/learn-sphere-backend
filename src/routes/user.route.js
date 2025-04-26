@@ -8,7 +8,7 @@ import validatorSchema from "../modules/User/validatorSchema.js";
 const route = Router();
 
 route.get("/", authMiddleware, userController.getUsers)
-route.post("/", validator(validatorSchema.createUserSchema), userController.addUser)
+route.post("/register", validator(validatorSchema.createUserSchema), userController.addUser)
 route.get("/me", authMiddleware, userController.getUserMe)
 route.put("/me", authMiddleware, validator(validatorSchema.updateUserSchema), userController.updateUserMe)
 route.get("/:id", authMiddleware, userController.getUserByID)

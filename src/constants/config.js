@@ -21,7 +21,7 @@ const config = {
 // ============= CORS options =============
 
 export const corsOptions = {
-    origin: config.FRONTEND_URL || "*",
+    origin: config.FRONTEND_URL,
     credentials: true,
 }
 
