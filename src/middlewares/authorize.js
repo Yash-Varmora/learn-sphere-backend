@@ -1,11 +1,18 @@
 import { CustomError, httpStatusCodes } from "../constants/constants.js"
+import instructorService from "../services/instructor.service.js"
 
-
-const authorizeInstructor = (req, res, next) => { 
+const authorizeInstructor = async (req, res, next) => {
     try {
         const { user } = req
-        if (!user || user.isInstructor) {
+
+        if (!user || !user.isInstructor) {
             throw new CustomError(httpStatusCodes["Unauthorized"], "You are not authorized to access this resource")
+        }
+        const instructorProfile = await instructorService.getInstructorProfile(user.id)
+        console.log(instructorProfile)
+        req.user = {
+            ...user,
+            instructorProfile
         }
         next()
     } catch (error) {

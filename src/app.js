@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import helmet from "helmet"
 import cookieParser from "cookie-parser"
+import morgan from "morgan"
 
 import { corsOptions, limiter } from "./constants/config.js"
 import { CustomError, httpStatusCodes } from "./constants/constants.js"
@@ -10,6 +11,7 @@ import indexRoute from "./routes/index.js"
 
 const app = express()
 
+app.use(morgan("dev"))
 app.use(cors(corsOptions))
 
 app.use(limiter)

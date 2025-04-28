@@ -20,13 +20,14 @@ model User {
   email             String             @unique
   password          String
   isInstructor      Boolean            @default(false)
-  profilePicture    String?
   instructorProfile InstructorProfile?
   refreshToken      RefreshToken[]
-  Enrollments       Enrollment[]
-  sessions          CompletedSession[]
+  enrollments       Enrollment[]
+  completedLecture  CompletedLecture[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
+
+
 }
 
 model RefreshToken {
@@ -48,7 +49,6 @@ model InstructorProfile {
   createdCourses Course[] @relation("InstructorToCourse")
   website        String?
   socialLinks    Json?
-  rating         Float?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -59,7 +59,7 @@ model Course {
   id           String            @id @default(uuid())
   title        String
   description  String
-  category     String
+  category     String          
   instructorId String
   instructor   InstructorProfile @relation("InstructorToCourse", fields: [instructorId], references: [id], onDelete: Cascade)
   sessions     Session[]
@@ -70,18 +70,35 @@ model Course {
   @@index([instructorId])
 }
 
+
+
 model Session {
   id                String             @id @default(uuid())
+  sessionOrder      Int
   title             String
-  videoUrl          String
-  description       Json
   courseId          String
   course            Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  completedSessions CompletedSession[]
+  lectures          Lecture[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
   @@index([courseId])
+}
+
+model Lecture {
+  id String @id @default(uuid())
+  lectureOrder Int
+  title String
+  lectureDuration Int
+  lectureUrl String
+  isPreview Boolean @default(false)
+  sessionId String
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  completedLecture CompletedLecture[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sessionId])
 }
 
 model Enrollment {
@@ -96,14 +113,16 @@ model Enrollment {
   @@index([userId])
 }
 
-model CompletedSession {
+model CompletedLecture {
   id          String   @id @default(uuid())
-  userId      String   @unique
+  userId      String   
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sessionId   String   @unique
-  session     Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  lectureId   String
+  lecture     Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+  lectureUrl  String
   completedAt DateTime @default(now())
 
+  @@unique([userId, lectureId])
   @@index([userId])
-  @@index([sessionId])
+  @@index([lectureId])
 }
