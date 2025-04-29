@@ -9,7 +9,6 @@ const authorizeInstructor = async (req, res, next) => {
             throw new CustomError(httpStatusCodes["Unauthorized"], "You are not authorized to access this resource")
         }
         const instructorProfile = await instructorService.getInstructorProfile(user.id)
-        console.log(instructorProfile)
         req.user = {
             ...user,
             instructorProfile

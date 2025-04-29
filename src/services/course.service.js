@@ -1,6 +1,6 @@
 import prisma from "../configs/prisma.config.js"
 import { CustomError, httpStatusCodes } from "../constants/constants.js";
-
+import paginate from "../helpers/pagination.js";
 
 class CourseService {
     async createCourse(courseData) {
@@ -57,9 +57,10 @@ class CourseService {
         }
     }
 
-    async getAllCourses() {
+    async getAllCourses(conditions = {}, paginationData = {}) {
         try {
-            const courses = await prisma.course.findMany({
+            const courses = await paginate(prisma.course, {
+                where: { ...conditions },
                 include: {
                     instructor: {
                         include: {
@@ -72,7 +73,8 @@ class CourseService {
                         }
                     }
                 }
-            });
+            },
+                paginationData);
             return courses;
         } catch (error) {
             throw new CustomError(httpStatusCodes["Bad Request"], error.message)

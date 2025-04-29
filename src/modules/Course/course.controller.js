@@ -31,7 +31,10 @@ const getCourse = async (req, res, next) => {
 
 const getAllCourses = async (req, res, next) => {
     try {
-        const courses = await courseService.getAllCourses();
+        const { page } = req.query;
+        const conditions = req.query;
+        delete conditions.page;
+        const courses = await courseService.getAllCourses(conditions, { page});
         return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "Get all courses successfully", courses)
     } catch (error) {
         console.log("====> Error getAllCourses", error.message)
