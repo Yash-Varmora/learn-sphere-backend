@@ -89,8 +89,8 @@ model Lecture {
   id String @id @default(uuid())
   lectureOrder Int
   title String
-  lectureDuration Int
   lectureUrl String
+  description String
   isPreview Boolean @default(false)
   sessionId String
   session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
