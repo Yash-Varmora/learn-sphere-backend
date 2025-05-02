@@ -1,4 +1,4 @@
-import prisma from "../configs/prisma.config";
+import prisma from "../configs/prisma.config.js";
 
 const lectureService = {
     createLecture: async (lectureData) => {
@@ -26,8 +26,9 @@ const lectureService = {
                     },
                 }
             })
+            return lecture;
         } catch (error) {
-
+            throw error;
         }
     },
 
@@ -104,7 +105,7 @@ const lectureService = {
     },
     deleteLecture: async (id) => {
         try {
-            const lecture = await prisma.lecture.delete({
+            await prisma.lecture.delete({
                 where: { id }
             })
             return {message: "Delete lecture successfully"};
