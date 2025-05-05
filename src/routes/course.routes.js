@@ -7,7 +7,13 @@ import { createCourseSchema, updateCourseSchema, courseIdSchema } from "../modul
 
 const router = express.Router();
 
+
 router.get("/", courseController.getAllCourses);
+
+router.get(
+    "/categories",
+    courseController.getAllCategory
+);
 router.get("/:id", validateParams(courseIdSchema), courseController.getCourse);
 
 router.post(
@@ -41,5 +47,6 @@ router.get(
     authorizeInstructor,
     courseController.getInstructorCourses
 );
+
 
 export default router; 

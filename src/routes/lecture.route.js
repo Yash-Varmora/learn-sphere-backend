@@ -14,6 +14,11 @@ router.post(
     validate(createLectureSchema),
     lectureController.createLecture
 );
+router.get(
+    "/completed",
+    authMiddleware,
+    lectureController.getCompletedLecturesByUserId
+);
 router.get("/:id", authMiddleware, lectureController.getLecture);
 router.get("/session/:sessionId", authMiddleware, lectureController.getLecturesBySession);
 router.put(
@@ -24,5 +29,11 @@ router.put(
     lectureController.updateLecture
 );
 router.delete("/:id", authMiddleware, authorizeInstructor, lectureController.deleteLecture);
+router.post(
+    "/:lectureId/completed",
+    authMiddleware,
+    lectureController.markLectureAsCompleted
+);
+
 
 export default router;

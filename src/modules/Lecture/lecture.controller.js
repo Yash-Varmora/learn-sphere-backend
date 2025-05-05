@@ -1,6 +1,7 @@
 import lectureService from "../../services/lecture.service.js";
 import { CustomError, httpStatusCodes, responseStatus } from "../../constants/constants.js";
 import { sendResponse } from "../../helpers/response.js";
+import completedLectureService from "../../services/completedLecture.service.js";
 
 const createLecture = async (req, res, next) => {
     try {
@@ -76,10 +77,35 @@ const deleteLecture = async (req, res, next) => {
     }
 }
 
+const markLectureAsCompleted = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const {lectureId } = req.params;
+        const completedLecture = await completedLectureService.markLectureAsCompleted(userId, lectureId);
+        return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "Mark lecture as completed successfully", completedLecture)
+    } catch (error) {
+        console.log("====> Error markLectureAsCompleted", error.message)
+        return next(error)
+    }
+}
+
+const getCompletedLecturesByUserId = async (req, res, next) => { 
+    try {
+        const userId = req.user.id;
+        const completedLectures = await completedLectureService.getComputedLecturesByUserId(userId);
+        return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "Get completed lectures successfully", completedLectures)
+    } catch (error) {
+        console.log("====> Error getCompletedLecturesByUserId", error.message)
+        return next(error)
+    }
+}
+
 export default {
     createLecture,
     getLecture,
     getLecturesBySession,
     updateLecture,
-    deleteLecture
+    deleteLecture,
+    markLectureAsCompleted,
+    getCompletedLecturesByUserId
 }

@@ -47,7 +47,11 @@ const sessionService = {
                             }
                         }
                     },
-                    lectures: true
+                    lectures: {
+                        orderBy: {
+                            createdAt: "asc"
+                        }
+                    }
                 }
             });
             return session;
@@ -62,7 +66,12 @@ const sessionService = {
                 where: { courseId },
                 include: {
                     course:true,
-                    lectures: true
+                    lectures: {
+                        
+                        orderBy: {
+                            createdAt: "asc"
+                        }
+                    }
                 }
             });
             return sessions;

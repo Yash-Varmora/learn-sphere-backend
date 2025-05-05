@@ -1,5 +1,6 @@
 import { httpStatusCodes, responseStatus } from "../../constants/constants.js";
 import { sendResponse } from "../../helpers/response.js";
+import categoryService from "../../services/category.service.js";
 import courseService from "../../services/course.service.js"
 
 const createCourse = async (req, res, next) => {
@@ -90,11 +91,23 @@ const getInstructorCourses = async (req, res, next) => {
     }
 }
 
+const getAllCategory = async (req, res, next) => {
+    try {
+        const categories = await categoryService.getAllCategories();
+        return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "Get all categories successfully", categories)
+    } catch (error) {
+        console.log(error)
+        console.log("====> Error getAllCategory", error.message)
+        return next(error)
+    }
+}
+
 export default {
     createCourse,
     getCourse,
     getAllCourses,
     updateCourse,
     deleteCourse,
-    getInstructorCourses
+    getInstructorCourses,
+    getAllCategory
 }

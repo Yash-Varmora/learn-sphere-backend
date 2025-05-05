@@ -65,7 +65,10 @@ const lectureService = {
     getLectureBySessionId: async (sessionId) => {
         try {
             const lectures = await prisma.lecture.findMany({
-                where: { sessionId }
+                where: { sessionId },
+                orderBy: {
+                    createdAt: "asc"
+                }
             })
             return lectures;
         } catch (error) {

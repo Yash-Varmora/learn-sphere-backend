@@ -1,14 +1,22 @@
 import prisma from "../configs/prisma.config.js"
 import { CustomError, httpStatusCodes } from "../constants/constants.js";
 import paginate from "../helpers/pagination.js";
+import categoryService from "./category.service.js";
 
-class CourseService {
-    async createCourse(courseData) {
+const courseService = {
+    createCourse: async(courseData) =>{
         try {
+
+            
+            let category = await categoryService.getCategoryByName(courseData.category);
+            if (!category) {
+                category = await categoryService.createCategory(courseData.category);
+            }
+            courseData.categoryId = category.id;
+            delete courseData.category;
             const course = await prisma.course.create({
                 data: {
-                    ...courseData,
-                    instructorId: courseData.instructorId
+                    ...courseData
                 },
                 include: {
                     instructor: {
@@ -20,16 +28,17 @@ class CourseService {
                                 }
                             }
                         }
-                    }
+                    },
+                    category: true,
                 }
             });
             return course;
         } catch (error) {
             throw new CustomError(httpStatusCodes["Bad Request"], error.message)
         }
-    }
+    },
 
-    async getCourseById(courseId) {
+     getCourseById:async (courseId)=> {
         try {
             const course = await prisma.course.findUnique({
                 where: { id: courseId },
@@ -48,16 +57,18 @@ class CourseService {
                         include: {
                             lectures: true
                         }
-                    }
+                    },
+                    enrollments: true,
+                    category: true,
                 }
             });
             return course;
         } catch (error) {
             throw new CustomError(httpStatusCodes["Bad Request"], error.message)
         }
-    }
+    },
 
-    async getAllCourses(conditions = {}, paginationData = {}) {
+    getAllCourses: async (conditions = {}, paginationData = {})=> {
         try {
             const courses = await paginate(prisma.course, {
                 where: { ...conditions },
@@ -71,7 +82,8 @@ class CourseService {
                                 }
                             }
                         }
-                    }
+                    },
+                    category: true,
                 }
             },
                 paginationData);
@@ -79,10 +91,17 @@ class CourseService {
         } catch (error) {
             throw new CustomError(httpStatusCodes["Bad Request"], error.message)
         }
-    }
+    },
 
-    async updateCourse(courseId, courseData) {
+    updateCourse: async (courseId, courseData) => {
+        
         try {
+            let category = await categoryService.getCategoryByName(courseData.category);
+            if (!category) {
+                category = await categoryService.createCategory(courseData.category);
+            }
+            courseData.categoryId = category.id;
+            delete courseData.category;
             const course = await prisma.course.update({
                 where: { id: courseId },
                 data: courseData,
@@ -96,16 +115,17 @@ class CourseService {
                                 }
                             }
                         }
-                    }
+                    },
+                    category: true,
                 }
             });
             return course;
         } catch (error) {
             throw new CustomError(httpStatusCodes["Bad Request"], error.message)
         }
-    }
+    },
 
-    async deleteCourse(courseId) {
+    deleteCourse: async (courseId) =>{
         try {
             await prisma.course.delete({
                 where: { id: courseId }
@@ -114,9 +134,9 @@ class CourseService {
         } catch (error) {
             throw new CustomError(httpStatusCodes["Bad Request"], error.message)
         }
-    }
+    },
 
-    async getCoursesByInstructor(instructorId) {
+    getCoursesByInstructor: async (instructorId) =>{
         try {
             const courses = await prisma.course.findMany({
                 where: { instructorId },
@@ -130,7 +150,8 @@ class CourseService {
                                 }
                             }
                         }
-                    }
+                    },
+                    category: true,
                 }
             });
             return courses;
@@ -140,4 +161,4 @@ class CourseService {
     }
 }
 
-export default new CourseService();
+export default courseService;

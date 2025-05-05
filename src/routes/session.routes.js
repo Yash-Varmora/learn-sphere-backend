@@ -17,4 +17,6 @@ router.put('/:id', authMiddleware, authorizeInstructor, validate(updateSessionSc
 
 router.delete('/:id', authMiddleware, authorizeInstructor, sessionController.deleteSession);
 
+router.get("/:courseId/completed", authMiddleware, sessionController.completedSessionByCourse)
+
 export default router; 

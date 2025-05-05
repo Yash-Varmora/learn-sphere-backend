@@ -2,6 +2,8 @@
 import sessionService from "../../services/session.service.js";
 import { httpStatusCodes, responseStatus } from "../../constants/constants.js";
 import { sendResponse } from "../../helpers/response.js";
+import enrollmentService from "../../services/enrollment.service.js";
+import completedSession from "../../helpers/completedSession.js";
 
 const createSession = async (req, res, next) => {
     try {
@@ -80,10 +82,28 @@ const deleteSession = async (req, res, next) => {
     }
 }
 
+const completedSessionByCourse = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const { courseId } = req.params
+        
+        const data = await enrollmentService.getEnrollmentDataByUserIdAndCourseId(userId, courseId)
+        const completedSessions = completedSession(data)
+
+        const completedSessionId = completedSessions.map(session => session.id)
+
+        return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "completed session successfully", completedSessionId)
+    } catch (error) {
+        console.log("====> Error completedSessionByCourse", error.message)
+        return next(error)
+    }
+}
+
 export default {
     createSession,
     getSession,
     getSessionsByCourse,
     updateSession,
-    deleteSession
+    deleteSession,
+    completedSessionByCourse
 } 
