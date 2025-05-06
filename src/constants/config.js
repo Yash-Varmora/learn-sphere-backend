@@ -15,7 +15,8 @@ const config = {
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
     REFRESH_TOKEN_EXPIRES: process.env.REFRESH_TOKEN_EXPIRES,
     REFRESH_TOKEN_COOKIE_EXPIRE_TIME: process.env.REFRESH_TOKEN_COOKIE_EXPIRE_TIME,
-    FRONTEND_URL: process.env.FRONTEND_URL
+    FRONTEND_URL: process.env.FRONTEND_URL,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
 }
 
 // ============= CORS options =============

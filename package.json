@@ -23,17 +23,18 @@
   "dependencies": {
     "@prisma/client": "^5.10.2",
     "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
+    "google-auth-library": "^9.15.1",
     "helmet": "^7.1.0",
     "joi": "^17.12.1",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "prisma": "^5.10.2",
-    "compression": "^1.7.4",
-    "express-validator": "^7.0.1"
+    "prisma": "^5.10.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"
