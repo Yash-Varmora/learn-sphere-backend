@@ -8,7 +8,6 @@ const createReview = async (req, res, next) => {
         const { courseId } = req.params
         const { review, rating } = req.body;
         const reviewData = { review, rating, userId, courseId };
-        console.log(reviewData)
         const createdReview = await reviewService.createReview(reviewData);
         return sendResponse(res, httpStatusCodes["Created"], responseStatus.SUCCESS, "Create review successfully", createdReview);
     } catch (error) {
@@ -29,7 +28,26 @@ const getReviews = async (req, res, next) => {
     }
 }
 
+const getAverageRating = async (req, res, next) => {
+    try {
+        const { courseId } = req.params;
+        const avgRating = await reviewService.getAverageRating(courseId);
+        return sendResponse(
+            res,
+            httpStatusCodes["OK"],
+            responseStatus.SUCCESS,
+            "Fetched average rating successfully",
+            { averageRating: avgRating }
+        );
+    } catch (error) {
+        console.log("====> Error getAverageRating", error.message);
+        return next(error);
+    }
+}
+
+
 export default {
     createReview,
     getReviews,
+    getAverageRating
 }

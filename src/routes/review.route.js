@@ -8,5 +8,7 @@ const router = Router()
 
 router.post("/:courseId/review", authMiddleware, validator(createReviewSchema), reviewController.createReview)
 router.get("/:courseId/review", reviewController.getReviews)
+router.get("/:courseId/average_rating", reviewController.getAverageRating);
+
 
 export default router;

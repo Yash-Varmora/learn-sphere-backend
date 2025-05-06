@@ -7,7 +7,15 @@ const reviewService = {
             const review = await prisma.courseReview.create({
                 data: {
                     ...data
-                }
+                },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true
+                        }
+                    },
+                },
             })
             return review
         } catch (error) {
@@ -39,6 +47,23 @@ const reviewService = {
         }
 
     },
+
+    getAverageRating: async (courseId) => { 
+        try {
+            const result = await prisma.courseReview.aggregate({
+                where: {
+                    courseId
+                },
+                _avg: {
+                    rating: true
+                }
+            })
+            return result._avg.rating || 0;
+        } catch (error) {
+            console.log("====> Error getAverageRating", error.message);
+            throw new Error("Failed to get average rating");
+        }
+    }
 }
 
 export default reviewService;
