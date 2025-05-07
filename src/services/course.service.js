@@ -4,10 +4,10 @@ import paginate from "../helpers/pagination.js";
 import categoryService from "./category.service.js";
 
 const courseService = {
-    createCourse: async(courseData) =>{
+    createCourse: async (courseData) => {
         try {
 
-            
+
             let category = await categoryService.getCategoryByName(courseData.category);
             if (!category) {
                 category = await categoryService.createCategory(courseData.category);
@@ -38,7 +38,7 @@ const courseService = {
         }
     },
 
-     getCourseById:async (courseId)=> {
+    getCourseById: async (courseId) => {
         try {
             const course = await prisma.course.findUnique({
                 where: { id: courseId },
@@ -68,7 +68,7 @@ const courseService = {
         }
     },
 
-    getAllCourses: async (conditions = {}, paginationData = {})=> {
+    getAllCourses: async (conditions = {}, paginationData = {}) => {
         try {
             const courses = await paginate(prisma.course, {
                 where: { ...conditions },
@@ -84,6 +84,7 @@ const courseService = {
                         }
                     },
                     category: true,
+                    courseReviews: { select: { rating: true } },
                 }
             },
                 paginationData);
@@ -94,7 +95,7 @@ const courseService = {
     },
 
     updateCourse: async (courseId, courseData) => {
-        
+
         try {
             let category = await categoryService.getCategoryByName(courseData.category);
             if (!category) {
@@ -125,7 +126,7 @@ const courseService = {
         }
     },
 
-    deleteCourse: async (courseId) =>{
+    deleteCourse: async (courseId) => {
         try {
             await prisma.course.delete({
                 where: { id: courseId }
@@ -136,7 +137,7 @@ const courseService = {
         }
     },
 
-    getCoursesByInstructor: async (instructorId) =>{
+    getCoursesByInstructor: async (instructorId) => {
         try {
             const courses = await prisma.course.findMany({
                 where: { instructorId },
@@ -152,6 +153,13 @@ const courseService = {
                         }
                     },
                     category: true,
+                    courseReviews: { select: { rating: true } },
+                    enrollments: true,
+                    sessions: {
+                        select: {
+                            lectures: { select: { id: true } },
+                        },
+                    }
                 }
             });
             return courses;

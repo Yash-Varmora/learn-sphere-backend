@@ -35,12 +35,20 @@ const getAllCourses = async (req, res, next) => {
         const { page } = req.query;
         const conditions = req.query;
         delete conditions.page;
-        const courses = await courseService.getAllCourses(conditions, { page});
-        return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "Get all courses successfully", courses)
+
+        const courses = await courseService.getAllCourses(conditions, { page });
+        const coursesData = courses.data.map((course) => {
+            const total = course.courseReviews.reduce((sum, r) => sum + r.rating, 0);
+            const avg = course.courseReviews.length
+                ? total / course.courseReviews.length
+                : 0;
+            return { ...course, averageRating: Number(avg.toFixed(1)) }
+        })
+        return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "Get all courses successfully", coursesData)
     } catch (error) {
         console.log("====> Error getAllCourses", error.message)
         return next(error)
-    }
+    }   
 }
 
 const updateCourse = async (req, res, next) => {
