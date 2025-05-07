@@ -44,7 +44,13 @@ const getAllCourses = async (req, res, next) => {
                 : 0;
             return { ...course, averageRating: Number(avg.toFixed(1)) }
         })
-        return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "Get all courses successfully", coursesData)
+        const data = {
+            data: coursesData,
+            total: courses.total,
+            page: courses.page,
+            totalPages: courses.totalPages
+        }
+        return sendResponse(res, httpStatusCodes["OK"], responseStatus.SUCCESS, "Get all courses successfully", data)
     } catch (error) {
         console.log("====> Error getAllCourses", error.message)
         return next(error)
